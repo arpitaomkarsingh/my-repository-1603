@@ -1,0 +1,20 @@
+pipeline{
+    agent any
+    stages{
+        stage('code checkout'){
+            steps{
+                checkout scmGit(branches: [[name: '*/main']], extensions: [], userRemoteConfigs: [[credentialsId: 'github', url: 'https://github.com/arpitaomkarsingh/my-repository-1603.git']])
+            }
+        }
+        stage('Docker Build and push') {
+      steps {
+        script {
+              docker.withRegistry( 'https://registry.hub.docker.com', 'dockerhub' ) {
+              def customImage = docker.build("arpitasin/my-first-repo-arpita-jenkins")
+              customImage.push()
+          }
+      }
+    }
+}
+    }
+}
